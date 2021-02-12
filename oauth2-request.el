@@ -33,7 +33,7 @@
 (require 'request)
 
 (defgroup oauth2-request nil
-  "OAuth2 request package interface."
+  "OAuth2 `request' package interface."
   :group 'convenience
   :link '(url-link :tag "Github" "https://github.com/conao3/oauth2-request.el"))
 
