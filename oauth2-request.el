@@ -69,6 +69,7 @@ TOKEN is `oauth2-token'.  ARGS are `request' argument.
              (response (make-request-response))
              &allow-other-keys)."
   (declare (indent 2))
+  (oauth2-refresh-access token)
   (let ((headers (oauth2-request-plist-get args :headers))
         (oauth--token-data (cons token url)))
     (when (alist-get "Authorization" headers)
