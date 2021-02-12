@@ -5,7 +5,7 @@
 ;; Author: Naoya Yamashita <conao3@gmail.com>
 ;; Version: 0.0.1
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Requires: ((emacs "26.1") (oauth2 "0.14"))
 ;; URL: https://github.com/conao3/oauth2-request.el
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,8 @@
 
 
 ;;; Code:
+
+(require 'oauth2)
 
 (defgroup oauth2-request nil
   "OAuth2 request package interface."
