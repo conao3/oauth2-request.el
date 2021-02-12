@@ -75,6 +75,12 @@ TOKEN is `oauth2-token'.  ARGS are `request' argument.
               (oauth2-token-access-token token)))))
   (apply #'request url args))
 
+(defun oauth2-request-synchronously (token url &rest args)
+  "OAuth2 `request', enhanced `oauth2-url-retrieve-synchronously'.
+See `oauth2-request' for TOKEN, URL, ARGS documentation."
+  (setf (oauth2-request-plist-get args :sync) t)
+  (apply #'oauth2-request token url args))
+
 (provide 'oauth2-request)
 
 ;;; oauth2-request.el ends here
