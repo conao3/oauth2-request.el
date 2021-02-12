@@ -51,6 +51,30 @@
                           (setcar ,p ,val)
                         ,(funcall setter `(cons ,key (cons ,val ,getter)))))))))))
 
+(defun oauth2-request (token url &rest args)
+  "OAuth2 `request', enhanced `oauth2-url-retrieve'.
+
+TOKEN is `oauth2-token'.  ARGS are `request' argument.
+  (URL &rest settings
+             &key
+             (params nil)
+             (data nil)
+             (headers nil)
+             (encoding 'utf-8)
+             (error nil)
+             (sync nil)
+             (response (make-request-response))
+             &allow-other-keys)."
+  (declare (indent 2))
+  (let ((headers (oauth2-request-plist-get args :headers)))
+    (when (alist-get "Authorization" headers)
+      (error "Don't specify Authorization slot"))
+    (setf (oauth2-request-plist-get args :headers)
+          `(,@headers
+            ,(oauth2-authz-bearer-header
+              (oauth2-token-access-token token)))))
+  (apply #'request url args))
+
 (provide 'oauth2-request)
 
 ;;; oauth2-request.el ends here
