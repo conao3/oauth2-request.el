@@ -51,6 +51,7 @@
                           (setcar ,p ,val)
                         ,(funcall setter `(cons ,key (cons ,val ,getter)))))))))))
 
+;;;###autoload
 (defun oauth2-request (token url &rest args)
   "OAuth2 `request', enhanced `oauth2-url-retrieve'.
 
@@ -75,6 +76,7 @@ TOKEN is `oauth2-token'.  ARGS are `request' argument.
               (oauth2-token-access-token token)))))
   (apply #'request url args))
 
+;;;###autoload
 (defun oauth2-request-synchronously (token url &rest args)
   "OAuth2 `request', enhanced `oauth2-url-retrieve-synchronously'.
 See `oauth2-request' for TOKEN, URL, ARGS documentation."
