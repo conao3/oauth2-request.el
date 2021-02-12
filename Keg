@@ -1,0 +1,9 @@
+;; Keg
+
+(source gnu melpa)
+
+(package
+ (oauth2-request
+  (recipe . (oauth2-request :fetcher github :repo "conao3/oauth2-request.el"))))
+
+(dev-dependency cort)
