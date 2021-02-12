@@ -28,6 +28,7 @@
 
 ;;; Code:
 
+(require 'gv)
 (require 'oauth2)
 (require 'request)
 
@@ -35,6 +36,20 @@
   "OAuth2 request package interface."
   :group 'convenience
   :link '(url-link :tag "Github" "https://github.com/conao3/oauth2-request.el"))
+
+;; Included at Emacs-27.2
+(defalias 'oauth2-request-plist-get #'plist-get)
+(gv-define-expander oauth2-request-plist-get
+  (lambda (do plist prop)
+    (macroexp-let2 macroexp-copyable-p key prop
+      (gv-letplace (getter setter) plist
+        (macroexp-let2 nil p `(cdr (plist-member ,getter ,key))
+          (funcall do
+                   `(car ,p)
+                   (lambda (val)
+                     `(if ,p
+                          (setcar ,p ,val)
+                        ,(funcall setter `(cons ,key (cons ,val ,getter)))))))))))
 
 (provide 'oauth2-request)
 
