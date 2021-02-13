@@ -24,8 +24,6 @@
   - [[#contributors][Contributors]]
 
 * Description
-[[https://github.com/conao3/oauth2-request.el][https://raw.githubusercontent.com/conao3/files/master/blob/oauth2-request.el/oauth2-request.gif]]
-
 OAuth2 request package interface.
 
 * Install
