@@ -92,7 +92,7 @@ TOKEN is `oauth2-token'.  ARGS are `request' argument.
   (let ((headers (oauth2-request-plist-get args :headers))
         (oauth--token-data (cons token url)))
     (when (alist-get "Authorization" headers)
-      (error "Don't specify Authorization slot"))
+      (error "Don't specify an Authorization slot"))
     (setf (oauth2-request-plist-get args :headers)
           (oauth2-extra-headers headers))
     (apply #'request url args)))
