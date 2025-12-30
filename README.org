@@ -1,112 +1,131 @@
-#+author: conao3
-#+date: <2020-03-20 Fri>
+#+title: oauth2-request.el
+#+author: Naoya Yamashita
 
 [[https://github.com/conao3/oauth2-request.el][https://raw.githubusercontent.com/conao3/files/master/blob/headers/png/oauth2-request.el.png]]
+
 [[https://github.com/conao3/oauth2-request.el/blob/master/LICENSE][https://img.shields.io/github/license/conao3/oauth2-request.el.svg?style=flat-square]]
 [[https://github.com/conao3/oauth2-request.el/releases][https://img.shields.io/github/tag/conao3/oauth2-request.el.svg?style=flat-square]]
 [[https://github.com/conao3/oauth2-request.el/actions][https://github.com/conao3/oauth2-request.el/workflows/Main%20workflow/badge.svg]]
-[[https://app.codacy.com/project/conao3/oauth2-request.el/dashboard][https://img.shields.io/codacy/grade/62a36f4f04524d5e8c758440e8071c45.svg?logo=codacy&style=flat-square]]
-[[https://www.patreon.com/conao3][https://img.shields.io/badge/patreon-become%20a%20patron-orange.svg?logo=patreon&style=flat-square]]
-[[https://twitter.com/conao_3][https://img.shields.io/badge/twitter-@conao__3-blue.svg?logo=twitter&style=flat-square]]
-[[https://conao3-support.slack.com/join/shared_invite/enQtNjUzMDMxODcyMjE1LWUwMjhiNTU3Yjk3ODIwNzAxMTgwOTkxNmJiN2M4OTZkMWY0NjI4ZTg4MTVlNzcwNDY2ZjVjYmRiZmJjZDU4MDE][https://img.shields.io/badge/chat-on_slack-blue.svg?logo=slack&style=flat-square]]
 
-* Table of Contents
-- [[#description][Description]]
-- [[#install][Install]]
-- [[#usage][Usage]]
-- [[#customize][Customize]]
-- [[#information][Information]]
-  - [[#community][Community]]
-  - [[#contribution][Contribution]]
-  - [[#migration][Migration]]
-  - [[#license][License]]
-  - [[#author][Author]]
-  - [[#contributors][Contributors]]
+An Emacs package that combines [[https://elpa.gnu.org/packages/oauth2.html][oauth2]] and [[https://github.com/tkf/emacs-request][request]] to provide a straightforward interface for making authenticated HTTP requests to OAuth2-protected APIs.
 
-* Description
-OAuth2 request package interface.
+* Features
 
-* Install
-Sample install code using [[https://github.com/conao3/leaf.el][leaf.el]].
+- Seamless integration of OAuth2 authentication with the request library
+- Automatic token refresh handling
+- Both asynchronous and synchronous request methods
+- Full access to request library options (headers, params, data, etc.)
+
+* Requirements
+
+- Emacs 26.1 or later
+- [[https://elpa.gnu.org/packages/oauth2.html][oauth2]] (0.14+)
+- [[https://github.com/tkf/emacs-request][request]] (0.3+)
+
+* Installation
+
+** Using leaf.el
 
 #+begin_src emacs-lisp
-  (leaf oauth2-request :ensure t)
+(leaf oauth2-request :ensure t)
+#+end_src
+
+** Using use-package
+
+#+begin_src emacs-lisp
+(use-package oauth2-request :ensure t)
+#+end_src
+
+** Manual Installation
+
+Clone this repository and add it to your load-path:
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "/path/to/oauth2-request.el")
+(require 'oauth2-request)
 #+end_src
 
 * Usage
-1. Get =token= using [[https://elpa.gnu.org/packages/oauth2.html][oauth2]] package.
 
-   #+begin_src elisp
-     (setq token
-           (let ((auth-url "https://accounts.google.com/o/oauth2/auth")
-                 (token-url "https://www.googleapis.com/oauth2/v3/token")
-                 (client-id "000000000000-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com")
-                 (client-secret "xxxxxxxxxxxxxxxxxxxxxxxx")
-                 (scope "https://www.googleapis.com/auth/calendar"))
-             (oauth2-auth-and-store auth-url token-url scope client-id client-secret)))
-   #+end_src
+** Step 1: Obtain an OAuth2 Token
 
-2. Request API using =oauth2-request= or =oauth2-request-synchronously= as [[https://github.com/tkf/emacs-request][request]] package wrapper.
+Use the =oauth2= package to authenticate and store your token:
 
-   #+begin_src sh
-     (oauth2-request token "https://www.googleapis.com/calendar/v3/users/me/calendarList"
-       :complete (cl-function
-                  (lambda (&key response &allow-other-keys)
-                    (with-current-buffer (generate-new-buffer "*oauth2-request*")
-                      (insert (pp-to-string response))
-                      (newline)
-                      (insert (request-response-data response))
-                      (display-buffer (current-buffer))))))
-   #+end_src
-
-* Customize
-
-* Information
-** Community
-Any feedback or suggestions are welcome!
-
-You can use github issues, but you can also use [[https://conao3-support.slack.com/join/shared_invite/enQtNjUzMDMxODcyMjE1LWUwMjhiNTU3Yjk3ODIwNzAxMTgwOTkxNmJiN2M4OTZkMWY0NjI4ZTg4MTVlNzcwNDY2ZjVjYmRiZmJjZDU4MDE][Slack]]
-if you want a more casual conversation.
-
-** Contribution
-We welcome PR!
-
-*** Require tools for testing
-- keg
-  #+begin_src shell
-    cd ~/
-    hub clone conao3/keg .keg
-    export PATH="$HOME/.keg/bin:$PATH"
-  #+end_src
-
-*** Running test
-Below operation flow is recommended.
-#+begin_src shell
-  git branch [feature-branch]       # Create branch named [feature-branch]
-  git checkout [feature-branch]     # Checkout branch named [feature-branch]
-
-  # <edit loop>
-  emacs oauth2-request.el             # Edit something you want
-
-  make test                         # Test oauth2-request
-  git commit -am "brabra"           # Commit (auto-run test before commit)
-  # </edit loop>
-
-  hub fork                          # Create fork at GitHub
-  git push [user] [feature-branch]  # Push feature-branch to your fork
-  hub pull-request                  # Create pull-request
+#+begin_src emacs-lisp
+(setq my-token
+      (let ((auth-url "https://accounts.google.com/o/oauth2/auth")
+            (token-url "https://www.googleapis.com/oauth2/v3/token")
+            (client-id "YOUR-CLIENT-ID.apps.googleusercontent.com")
+            (client-secret "YOUR-CLIENT-SECRET")
+            (scope "https://www.googleapis.com/auth/calendar"))
+        (oauth2-auth-and-store auth-url token-url scope client-id client-secret)))
 #+end_src
 
-** Migration
+** Step 2: Make Authenticated Requests
 
-** License
-#+begin_example
-  General Public License Version 3 (GPLv3)
-  Copyright (c) Naoya Yamashita - https://conao3.com
-  https://github.com/conao3/oauth2-request.el/blob/master/LICENSE
-#+end_example
+Use =oauth2-request= for asynchronous requests:
 
-** Author
-- Naoya Yamashita ([[https://github.com/conao3][conao3]])
+#+begin_src emacs-lisp
+(oauth2-request my-token "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+  :complete (cl-function
+             (lambda (&key response &allow-other-keys)
+               (message "Response: %s" (request-response-data response)))))
+#+end_src
 
-** Contributors
+Use =oauth2-request-synchronously= for synchronous requests:
+
+#+begin_src emacs-lisp
+(oauth2-request-synchronously my-token "https://api.example.com/endpoint"
+  :type "POST"
+  :data (json-encode '((key . "value")))
+  :headers '(("Content-Type" . "application/json")))
+#+end_src
+
+* API Reference
+
+** oauth2-request (token url &rest args)
+
+Make an asynchronous OAuth2-authenticated HTTP request.
+
+- =token= - An =oauth2-token= object from =oauth2-auth-and-store=
+- =url= - The API endpoint URL
+- =args= - Any arguments accepted by the =request= function
+
+** oauth2-request-synchronously (token url &rest args)
+
+Make a synchronous OAuth2-authenticated HTTP request. Same arguments as =oauth2-request=.
+
+* Contributing
+
+Contributions are welcome. Please feel free to submit issues and pull requests.
+
+** Development Setup
+
+1. Install [[https://github.com/conao3/keg][keg]]:
+   #+begin_src shell
+   cd ~/
+   git clone https://github.com/conao3/keg .keg
+   export PATH="$HOME/.keg/bin:$PATH"
+   #+end_src
+
+2. Run tests:
+   #+begin_src shell
+   make test
+   #+end_src
+
+** Workflow
+
+#+begin_src shell
+git checkout -b your-feature-branch
+# Make your changes
+make test
+git commit -am "Add your feature"
+git push origin your-feature-branch
+# Open a pull request
+#+end_src
+
+* License
+
+GPL-3.0. See [[https://github.com/conao3/oauth2-request.el/blob/master/LICENSE][LICENSE]] for details.
+
+Copyright (c) Naoya Yamashita ([[https://github.com/conao3][conao3]])
