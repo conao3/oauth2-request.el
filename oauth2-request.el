@@ -5,7 +5,7 @@
 ;; Author: Naoya Yamashita <conao3@gmail.com>
 ;; Version: 1.0.0
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "26.1") (oauth2 "0.14") (request "0.3"))
+;; Package-Requires: ((emacs "27.1") (oauth2 "0.14") (request "0.3"))
 ;; URL: https://github.com/conao3/oauth2-request.el
 
 ;; This program is free software: you can redistribute it and/or modify
