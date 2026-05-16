@@ -19,8 +19,8 @@ An Emacs package that combines [[https://elpa.gnu.org/packages/oauth2.html][oaut
 * Requirements
 
 - Emacs 27.1 or later
-- [[https://elpa.gnu.org/packages/oauth2.html][oauth2]] (0.14+)
-- [[https://github.com/tkf/emacs-request][request]] (0.3+)
+- [[https://elpa.gnu.org/packages/oauth2.html][oauth2]] (0.18.4+)
+- [[https://github.com/tkf/emacs-request][request]] (0.3.3+)
 
 * Installation
 
